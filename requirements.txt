@@ -7,3 +7,4 @@ pyproj
 openpyxl
 pillow<11
 geopandas
+tslearn==0.6.3
