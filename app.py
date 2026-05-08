@@ -156,7 +156,7 @@ elif menu == "📈 GWPR":
     )
 
     gwpr = pd.read_csv(
-        "C:/Users/HP/Downloads/gwr_result.csv"
+        "gwr_result.csv"
     )
 
     gwpr.columns = gwpr.columns.str.strip()
