@@ -6,3 +6,4 @@ scikit-learn
 pyproj
 openpyxl
 pillow<11
+geopandas
