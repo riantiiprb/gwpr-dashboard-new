@@ -339,7 +339,7 @@ elif menu == "DTW Clustering":
             vals = np.nan_to_num(vals)
             series_list.append(vals)
 
-        arr = np.array(series_list).T
+        arr = np.array(series_list)
         X.append(arr)
 
     if len(X) == 0:
@@ -348,7 +348,7 @@ elif menu == "DTW Clustering":
 
     X = np.stack(X).astype(np.float64)
 
-    # Shape is now: (34, n_timestamps, n_features)
+    # X shape is now: (34, n_features, n_timestamps) = (34, 3, 4)
     # This is the correct format for TimeSeriesScalerMeanVariance
     st.write("Shape untuk scaler:", X.shape)
 
