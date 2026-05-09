@@ -318,36 +318,40 @@ elif menu == "DTW Clustering":
         )
 
         st.stop()
-        
+
     # =========================
     # TIME SERIES
     # =========================
-provinsi_list = sorted(df["Provinsi"].unique())
-
-tahun_unik = sorted(df["Tahun"].unique())
-
-X = []
-provinsi_valid = []
-
-for prov in provinsi_list:
-
-    temp = (
-        df[df["Provinsi"] == prov]
-        .sort_values("Tahun")
+    provinsi_list = sorted(
+        df["Provinsi"].unique()
     )
 
-    # cek jumlah tahun lengkap
-    if len(temp) == len(tahun_unik):
+    tahun_unik = sorted(
+        df["Tahun"].unique()
+    )
 
-        values = temp[fitur].values.astype(float)
+    X = []
 
-        # cek tidak ada NaN
-        if not np.isnan(values).any():
+    provinsi_valid = []
 
-            X.append(values)
-            provinsi_valid.append(prov)
+    for prov in provinsi_list:
 
-X = np.array(X, dtype=float)
+        temp = (
+            df[df["Provinsi"] == prov]
+            .sort_values("Tahun")
+        )
+
+        if len(temp) == len(tahun_unik):
+
+            values = temp[fitur].values.astype(float)
+
+            if not np.isnan(values).any():
+
+                X.append(values)
+
+                provinsi_valid.append(prov)
+
+    X = np.array(X, dtype=float)
 
     # =========================
     # SCALING
@@ -369,7 +373,7 @@ X = np.array(X, dtype=float)
 
     hasil = pd.DataFrame({
 
-        "Provinsi": provinsi_list,
+        "Provinsi": provinsi_valid,
 
         "Cluster": cluster
 
