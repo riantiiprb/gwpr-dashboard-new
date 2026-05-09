@@ -282,7 +282,7 @@ elif menu == "DTW Clustering":
     @st.cache_data
     def load_clustering():
         hasil = pd.read_csv(
-            "dtw_clustering_result.csv"
+            "dtw_cluster_result.csv"
         )
         hasil.columns = hasil.columns.str.strip()
         hasil["Provinsi"] = hasil["Provinsi"].str.upper()
