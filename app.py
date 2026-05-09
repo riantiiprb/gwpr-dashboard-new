@@ -356,22 +356,23 @@ X = np.array(X, dtype=np.float64)
 st.write("Shape X:", X.shape)
 
 # =========================
+# =========================
 # SCALING
 # =========================
 scaler = TimeSeriesScalerMeanVariance()
 
 X_scaled = scaler.fit_transform(X)
 
-    # =========================
-    # MODEL DTW
-    # =========================
-    model = TimeSeriesKMeans(
-        n_clusters=n_cluster,
-        metric="dtw",
-        random_state=42
-    )
+# =========================
+# MODEL DTW
+# =========================
+model = TimeSeriesKMeans(
+    n_clusters=n_cluster,
+    metric="dtw",
+    random_state=42
+)
 
-    cluster = model.fit_predict(X_scaled)
+cluster = model.fit_predict(X_scaled)
 
     hasil = pd.DataFrame({
 
