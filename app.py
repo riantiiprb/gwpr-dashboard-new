@@ -381,6 +381,9 @@ elif menu == "DTW Clustering":
 # =========================
 scaler = TimeSeriesScalerMeanVariance()
 
+st.write("Shape X:", np.array(X).shape)
+st.write("Jumlah series:", len(X))
+
 X_scaled = scaler.fit_transform(X)
 
 # =========================
