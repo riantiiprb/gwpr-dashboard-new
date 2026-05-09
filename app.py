@@ -279,29 +279,31 @@ elif menu == "DTW Clustering":
     # =========================
     st.sidebar.subheader("Pengaturan DTW")
 
-# =========================
-# SIDEBAR DTW
-# =========================
-st.sidebar.subheader("Pengaturan DTW")
-
-fitur = st.sidebar.multiselect(
-    "Pilih Variabel",
-    [
-        "Pertumbuhan",
-        "Pengeluaran",
-        "TPT",
-        "Kemiskinan",
-        "Gini",
-        "IPM"
+    available_features = [
+        c for c in [
+            "Pertumbuhan",
+            "Pengeluaran",
+            "TPT",
+            "Kemiskinan",
+            "Gini",
+            "IPM"
+        ]
+        if c in df.columns
     ]
-)
 
-n_cluster = st.sidebar.slider(
-    "Jumlah Cluster",
-    min_value=2,
-    max_value=6,
-    value=3
-)
+    fitur = st.sidebar.multiselect(
+        "Pilih Variabel",
+        available_features,
+        default=available_features[:3]
+    )
+
+    n_cluster = st.sidebar.slider(
+        "Jumlah Cluster",
+        min_value=2,
+        max_value=6,
+        value=3
+    )
+
     # =========================
     # VALIDASI
     # =========================
@@ -312,7 +314,7 @@ n_cluster = st.sidebar.slider(
         )
 
         st.stop()
-
+        
     # =========================
     # TIME SERIES
     # =========================
