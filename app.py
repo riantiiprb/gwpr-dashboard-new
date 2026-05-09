@@ -26,11 +26,11 @@ def load_data():
 
     df.columns = df.columns.str.strip()
 
-df = df.rename(columns={
-    "Laju Pertumbuhan Produk Domestik Regional Bruto  Atas Dasar Harga Konstan 2010 Menurut Provinsi (persen)": "Pertumbuhan",
-    "[Metode Baru] Pengeluaran Perkapita Disesuaikan": "Pengeluaran",
-    "Gini_Ratio": "Gini"
-})
+    df = df.rename(columns={
+        "Laju Pertumbuhan Produk Domestik Regional Bruto  Atas Dasar Harga Konstan 2010 Menurut Provinsi (persen)": "Pertumbuhan",
+        "[Metode Baru] Pengeluaran Perkapita Disesuaikan": "Pengeluaran",
+        "Gini_Ratio": "Gini"
+    })
 
     df["Provinsi"] = df["Provinsi"].str.upper()
 
