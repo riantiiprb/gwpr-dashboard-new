@@ -7,15 +7,12 @@ import matplotlib.pyplot as plt
 from tslearn.preprocessing import TimeSeriesScalerMeanVariance
 from tslearn.clustering import TimeSeriesKMeans
 
-# =========================
-# CONFIG
-# =========================
 st.set_page_config(
-    page_title="Dashboard Pembangunan Indonesia",
+    page_title="Dashboard Monitoring dan Evaluasi Pembangunan Nasional",
     layout="wide"
 )
 
-st.title("📊 Dashboard Pembangunan Indonesia")
+st.title("Dashboard Monitoring dan Evaluasi Pembangunan Nasional")
 
 # =========================
 # LOAD DATA
@@ -79,16 +76,16 @@ indo = load_geo()
 menu = st.sidebar.radio(
     "Menu Analisis",
     [
-        "🏥 Peta Stunting",
-        "📈 GWPR",
-        "🔄 DTW Clustering"
+        "Peta Stunting",
+        "GWPR",
+        "DTW Clustering"
     ]
 )
 
 # =========================
 # SIDEBAR FILTER
 # =========================
-st.sidebar.header("🔎 Filter")
+st.sidebar.header("Filter")
 
 prov_list = sorted(df["Provinsi"].unique())
 
@@ -107,9 +104,9 @@ tahun_pilih = st.sidebar.selectbox(
 # =========================================================
 # 1. PETA STUNTING
 # =========================================================
-if menu == "🏥 Peta Stunting":
+if menu == "Peta Stunting":
 
-    st.subheader("🏥 Peta Stunting Indonesia")
+    st.subheader("Peta Stunting Indonesia")
 
     temp = df[df["Tahun"] == tahun_pilih]
 
@@ -149,10 +146,10 @@ if menu == "🏥 Peta Stunting":
 # =========================================================
 # 2. GWPR
 # =========================================================
-elif menu == "📈 GWPR":
+elif menu == "GWPR":
 
     st.subheader(
-        "📈 Geographically Weighted Panel Regression"
+        "Geographically Weighted Panel Regression"
     )
 
     gwpr = pd.read_csv(
@@ -269,33 +266,34 @@ elif menu == "📈 GWPR":
 # =========================================================
 # 3. DTW CLUSTERING
 # =========================================================
-elif menu == "🔄 DTW Clustering":
+elif menu == "DTW Clustering":
 
     st.subheader(
-        "🔄 Dynamic Time Warping Clustering"
+        "Dynamic Time Warping Clustering"
     )
 
     # =========================
     # SIDEBAR DTW
     # =========================
-    st.sidebar.subheader("⚙️ Pengaturan DTW")
+    st.sidebar.subheader("Pengaturan DTW")
 
-    fitur = st.sidebar.multiselect(
-        "Pilih Variabel",
-        [
-            "Pertumbuhan",
-            "Pengeluaran",
-            "TPT",
-            "Kemiskinan",
-            "Gini",
-            "IPM"
-        ],
-        default=[
-            "Pertumbuhan",
-            "Kemiskinan",
-            "IPM"
-        ]
-    )
+available_features = [
+    c for c in [
+        "Pertumbuhan",
+        "Pengeluaran",
+        "TPT",
+        "Kemiskinan",
+        "Gini",
+        "IPM"
+    ]
+    if c in df.columns
+]
+
+fitur = st.sidebar.multiselect(
+    "Pilih Variabel",
+    available_features,
+    default=available_features[:3]
+)
 
     n_cluster = st.sidebar.slider(
         "Jumlah Cluster",
