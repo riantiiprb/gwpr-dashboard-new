@@ -395,22 +395,11 @@ model = TimeSeriesKMeans(
 cluster = model.fit_predict(X_scaled)
 
 hasil = pd.DataFrame({
+    "Provinsi": provinsi_valid,
+    "Cluster": cluster
+})
 
-        "Provinsi": provinsi_valid,
-
-        "Cluster": cluster
-
-    })
-
-    # =========================
-    # FILTER
-    # =========================
-    if prov_pilih != "Semua":
-
-        hasil = hasil[
-            hasil["Provinsi"] == prov_pilih
-        ]
-
+if prov_pilih != "Semua":
     # =========================
     # DATAFRAME
     # =========================
