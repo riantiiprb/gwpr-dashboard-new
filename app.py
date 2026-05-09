@@ -80,7 +80,7 @@ indo = load_geo()
 # SIDEBAR MENU
 # =========================
 menu = st.sidebar.radio(
-    "Dashboard Menu",
+    "Menu Analisis",
     [
         "Peta Stunting",
         "GWPR",
@@ -110,9 +110,9 @@ tahun_pilih = st.sidebar.selectbox(
 # =========================================================
 # 1. PETA STUNTING
 # =========================================================
-if menu == "Monitoring Stunting":
+if menu == "Peta Stunting":
 
-    st.subheader("Peta Sebaran Stunting Indonesia")
+    st.subheader("Peta Stunting Indonesia")
 
     temp = df[df["Tahun"] == tahun_pilih]
 
@@ -152,10 +152,10 @@ if menu == "Monitoring Stunting":
 # =========================================================
 # 2. GWPR
 # =========================================================
-elif menu == "Geographically Weighted Panel Regression":
+elif menu == "GWPR":
 
     st.subheader(
-        "Analisis Pengaruh Ekonomi terhadap Stunting"
+        "Geographically Weighted Panel Regression"
     )
 
     gwpr = pd.read_csv(
@@ -178,7 +178,7 @@ elif menu == "Geographically Weighted Panel Regression":
     # =========================
     # DATAFRAME
     # =========================
-    st.write("### Ringkasan Analisis Wilayah")
+    st.write("### Hasil GWPR")
 
     st.dataframe(gwpr)
 
@@ -187,7 +187,7 @@ elif menu == "Geographically Weighted Panel Regression":
     # =========================
     if "LocalR2" in gwpr.columns:
 
-        st.write("### Provinsi dengan Model Terbaik")
+        st.write("### Kekuatan Hubungan Model per Wilayah")
 
         top = gwpr.sort_values(
             "LocalR2",
@@ -233,7 +233,7 @@ elif menu == "Geographically Weighted Panel Regression":
     # =========================
     if "Growth" in gwpr.columns:
 
-        st.write("### Rekomendasi Kebijakan Wilayah")
+        st.write("### Rekomendasi Kebijakan")
 
         for _, row in gwpr.iterrows():
 
@@ -272,7 +272,7 @@ elif menu == "Geographically Weighted Panel Regression":
 # =========================================================
 # 3. DTW CLUSTERING
 # =========================================================
-elif menu == "Klasterisasi Pembangunan Wilayah":
+elif menu == "DTW Clustering":
 
     st.subheader("Dynamic Time Warping Clustering")
 
@@ -293,7 +293,7 @@ elif menu == "Klasterisasi Pembangunan Wilayah":
     # =========================
     # OUTPUT
     # =========================
-    st.write("### Hasil Clustering")
+    st.write("### Hasil Segmentasi Wilayah")
     st.dataframe(hasil)
 
     st.write("### Distribusi Cluster")
@@ -325,7 +325,7 @@ elif menu == "Klasterisasi Pembangunan Wilayah":
     # =========================
     # INTERPRETASI
     # =========================
-    st.write("### Karakteristik Kelompok Wilayah")
+    st.write("### Rekomendasi Kebijakan Wilayah")
 
     for c in sorted(
         hasil["Cluster"].unique()
