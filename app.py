@@ -351,19 +351,16 @@ elif menu == "DTW Clustering":
 
                 provinsi_valid.append(prov)
 
-    X = np.array(X, dtype=float)
+X = np.array(X, dtype=np.float64)
 
-    # =========================
-    # SCALING
-    # =========================
-    st.write("Jumlah provinsi valid:", len(provinsi_valid))
+st.write("Shape X:", X.shape)
 
-st.write("Shape X:", np.array(X).shape)
+# =========================
+# SCALING
+# =========================
+scaler = TimeSeriesScalerMeanVariance()
 
-st.write("Contoh data:", X[:2])
-    scaler = TimeSeriesScalerMeanVariance()
-
-    X_scaled = scaler.fit_transform(X)
+X_scaled = scaler.fit_transform(X)
 
     # =========================
     # MODEL DTW
