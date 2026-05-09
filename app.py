@@ -274,9 +274,7 @@ elif menu == "GWPR":
 # =========================================================
 elif menu == "DTW Clustering":
 
-    st.subheader(
-        "Dynamic Time Warping Clustering"
-    )
+    st.subheader("Dynamic Time Warping Clustering")
 
     # =========================
     # SIDEBAR DTW
@@ -312,11 +310,7 @@ elif menu == "DTW Clustering":
     # VALIDASI
     # =========================
     if len(fitur) == 0:
-
-        st.warning(
-            "Pilih minimal satu variabel"
-        )
-
+        st.warning("Pilih minimal satu variabel")
         st.stop()
 
     # =========================
@@ -334,13 +328,12 @@ elif menu == "DTW Clustering":
 
         pivot = pivot.sort_index(axis=1)
 
+        # 🔥 biar ga ada missing
+        pivot = pivot.interpolate(axis=1).ffill(axis=1).bfill(axis=1)
+
         pivot_data[fitur_col] = pivot
 
-    provinsi_valid = (
-        pivot_data[fitur[0]]
-        .index
-        .tolist()
-    )
+    provinsi_valid = pivot_data[fitur[0]].index.tolist()
 
     X = []
 
@@ -348,57 +341,46 @@ elif menu == "DTW Clustering":
 
         series_list = []
 
-        valid = True
-
         for fitur_col in fitur:
 
-            vals = (
-                pivot_data[fitur_col]
-                .loc[prov]
-                .values
-            )
+            vals = pivot_data[fitur_col].loc[prov].values
 
-            if np.isnan(vals).any():
-
-                valid = False
-
-                break
+            # 🔥 handle NaN
+            vals = np.nan_to_num(vals)
 
             series_list.append(vals)
 
-        if valid:
+        arr = np.array(series_list).T
+        X.append(arr)
 
-            arr = np.array(series_list).T
+    # =========================
+    # VALIDASI
+    # =========================
+    if len(X) == 0:
+        st.error("Data kosong setelah preprocessing")
+        st.stop()
 
-            X.append(arr)
+    X = np.stack(X).astype(np.float64)
 
-X = np.stack(X).astype(np.float64)
+    st.write("Shape X:", X.shape)
+    st.write("Jumlah series:", len(X))
 
-st.write("Shape X:", X.shape)
-st.write("Jumlah series:", len(X))
+    # =========================
+    # SCALING
+    # =========================
+    scaler = TimeSeriesScalerMeanVariance()
+    X_scaled = scaler.fit_transform(X)
 
+    # =========================
+    # MODEL DTW
+    # =========================
+    model = TimeSeriesKMeans(
+        n_clusters=n_cluster,
+        metric="dtw",
+        random_state=42
+    )
 
-# =========================
-# =========================
-# SCALING
-# =========================
-scaler = TimeSeriesScalerMeanVariance()
-
-X_scaled = scaler.fit_transform(X)
-
-# =========================
-# MODEL DTW
-# =========================
-# =========================
-# MODEL DTW
-# =========================
-model = TimeSeriesKMeans(
-    n_clusters=n_cluster,
-    metric="dtw",
-    random_state=42
-)
-
-cluster = model.fit_predict(X)
+    cluster = model.fit_predict(X_scaled)
 
 hasil = pd.DataFrame({
     "Provinsi": provinsi_valid,
