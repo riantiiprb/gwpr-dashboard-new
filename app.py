@@ -8,11 +8,11 @@ from tslearn.preprocessing import TimeSeriesScalerMeanVariance
 from tslearn.clustering import TimeSeriesKMeans
 
 st.set_page_config(
-    page_title="Dashboard Monitoring dan Evaluasi Pembangunan Nasional",
+    page_title="EconoSpatia Intelligence Dashboard",
     layout="wide"
 )
 
-st.title("Dashboard Monitoring dan Evaluasi Pembangunan Nasional")
+st.title("EconoSpatia Intelligence Dashboard")
 
 # =========================
 # LOAD DATA
