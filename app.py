@@ -322,24 +322,32 @@ elif menu == "DTW Clustering":
     # =========================
     # TIME SERIES
     # =========================
-    provinsi_list = sorted(
-        df["Provinsi"].unique()
+provinsi_list = sorted(df["Provinsi"].unique())
+
+tahun_unik = sorted(df["Tahun"].unique())
+
+X = []
+provinsi_valid = []
+
+for prov in provinsi_list:
+
+    temp = (
+        df[df["Provinsi"] == prov]
+        .sort_values("Tahun")
     )
 
-    X = []
+    # cek jumlah tahun lengkap
+    if len(temp) == len(tahun_unik):
 
-    for prov in provinsi_list:
+        values = temp[fitur].values.astype(float)
 
-        temp = (
-            df[
-                df["Provinsi"] == prov
-            ]
-            .sort_values("Tahun")[fitur]
-        )
+        # cek tidak ada NaN
+        if not np.isnan(values).any():
 
-        X.append(temp.values)
+            X.append(values)
+            provinsi_valid.append(prov)
 
-    X = np.array(X)
+X = np.array(X, dtype=float)
 
     # =========================
     # SCALING
