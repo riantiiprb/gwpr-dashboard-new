@@ -346,14 +346,13 @@ elif menu == "DTW Clustering":
         st.error("Data kosong setelah preprocessing")
         st.stop()
 
-X = np.stack(X).astype(np.float64)
+    X = np.stack(X).astype(np.float64)
 
-#FIX DIMENSI UNTUK TSLearn
-X = np.transpose(X, (0, 2, 1))
+    # FIX DIMENSI UNTUK TSLearn
+    X = np.transpose(X, (0, 2, 1))
 
-#CEK DI SINI
-st.write("Shape setelah transpose:", X.shape)
-
+    # CEK DI SINI
+    st.write("Shape setelah transpose:", X.shape)
     st.write("Shape X:", X.shape)
 
     # =========================
@@ -373,7 +372,7 @@ st.write("Shape setelah transpose:", X.shape)
 
     cluster = model.fit_predict(X_scaled)
 
-    # ✅ PINDAH KE SINI
+    # PINDAH KE SINI
     hasil = pd.DataFrame({
         "Provinsi": provinsi_valid,
         "Cluster": cluster
@@ -410,6 +409,7 @@ st.write("Shape setelah transpose:", X.shape)
     ax.axis("off")
 
     st.pyplot(fig)
+
     # =========================
     # INTERPRETASI
     # =========================
