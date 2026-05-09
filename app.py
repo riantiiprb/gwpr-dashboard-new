@@ -80,7 +80,7 @@ indo = load_geo()
 # SIDEBAR MENU
 # =========================
 menu = st.sidebar.radio(
-    "Menu Analisis",
+    "Dashboard Menu",
     [
         "Peta Stunting",
         "GWPR",
@@ -110,9 +110,9 @@ tahun_pilih = st.sidebar.selectbox(
 # =========================================================
 # 1. PETA STUNTING
 # =========================================================
-if menu == "Peta Stunting":
+if menu == "Monitoring Stunting":
 
-    st.subheader("Peta Stunting Indonesia")
+    st.subheader("Peta Sebaran Stunting Indonesia")
 
     temp = df[df["Tahun"] == tahun_pilih]
 
@@ -152,10 +152,10 @@ if menu == "Peta Stunting":
 # =========================================================
 # 2. GWPR
 # =========================================================
-elif menu == "GWPR":
+elif menu == "Geographically Weighted Panel Regression":
 
     st.subheader(
-        "Geographically Weighted Panel Regression"
+        "Analisis Pengaruh Ekonomi terhadap Stunting"
     )
 
     gwpr = pd.read_csv(
@@ -178,7 +178,7 @@ elif menu == "GWPR":
     # =========================
     # DATAFRAME
     # =========================
-    st.write("### Hasil GWPR")
+    st.write("### Ringkasan Analisis Wilayah")
 
     st.dataframe(gwpr)
 
@@ -187,7 +187,7 @@ elif menu == "GWPR":
     # =========================
     if "LocalR2" in gwpr.columns:
 
-        st.write("### Top Local R²")
+        st.write("### Provinsi dengan Model Terbaik")
 
         top = gwpr.sort_values(
             "LocalR2",
@@ -203,7 +203,7 @@ elif menu == "GWPR":
     # =========================
     if "LocalR2" in gwpr.columns:
 
-        st.write("### Peta Local R²")
+        st.write("### Peta Kekuatan Model Spasial")
 
         map_data = indo.merge(
             gwpr,
@@ -233,7 +233,7 @@ elif menu == "GWPR":
     # =========================
     if "Growth" in gwpr.columns:
 
-        st.write("### Insight Kebijakan")
+        st.write("### Rekomendasi Kebijakan Wilayah")
 
         for _, row in gwpr.iterrows():
 
@@ -272,7 +272,7 @@ elif menu == "GWPR":
 # =========================================================
 # 3. DTW CLUSTERING
 # =========================================================
-elif menu == "DTW Clustering":
+elif menu == "Klasterisasi Pembangunan Wilayah":
 
     st.subheader("Dynamic Time Warping Clustering")
 
@@ -325,7 +325,7 @@ elif menu == "DTW Clustering":
     # =========================
     # INTERPRETASI
     # =========================
-    st.write("### Interpretasi Cluster")
+    st.write("### Karakteristik Kelompok Wilayah")
 
     for c in sorted(
         hasil["Cluster"].unique()
