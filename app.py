@@ -306,9 +306,6 @@ elif menu == "DTW Clustering":
         value=3
     )
 
-    # =========================
-    # VALIDASI
-    # =========================
     if len(fitur) == 0:
         st.warning("Pilih minimal satu variabel")
         st.stop()
@@ -319,7 +316,6 @@ elif menu == "DTW Clustering":
     pivot_data = {}
 
     for fitur_col in fitur:
-
         pivot = df.pivot_table(
             index="Provinsi",
             columns="Tahun",
@@ -327,8 +323,6 @@ elif menu == "DTW Clustering":
         )
 
         pivot = pivot.sort_index(axis=1)
-
-        # 🔥 biar ga ada missing
         pivot = pivot.interpolate(axis=1).ffill(axis=1).bfill(axis=1)
 
         pivot_data[fitur_col] = pivot
@@ -338,24 +332,16 @@ elif menu == "DTW Clustering":
     X = []
 
     for prov in provinsi_valid:
-
         series_list = []
 
         for fitur_col in fitur:
-
             vals = pivot_data[fitur_col].loc[prov].values
-
-            # 🔥 handle NaN
             vals = np.nan_to_num(vals)
-
             series_list.append(vals)
 
         arr = np.array(series_list).T
         X.append(arr)
 
-    # =========================
-    # VALIDASI
-    # =========================
     if len(X) == 0:
         st.error("Data kosong setelah preprocessing")
         st.stop()
@@ -363,7 +349,6 @@ elif menu == "DTW Clustering":
     X = np.stack(X).astype(np.float64)
 
     st.write("Shape X:", X.shape)
-    st.write("Jumlah series:", len(X))
 
     # =========================
     # SCALING
@@ -372,7 +357,7 @@ elif menu == "DTW Clustering":
     X_scaled = scaler.fit_transform(X)
 
     # =========================
-    # MODEL DTW
+    # MODEL
     # =========================
     model = TimeSeriesKMeans(
         n_clusters=n_cluster,
@@ -382,37 +367,23 @@ elif menu == "DTW Clustering":
 
     cluster = model.fit_predict(X_scaled)
 
-hasil = pd.DataFrame({
-    "Provinsi": provinsi_valid,
-    "Cluster": cluster
-})
+    # ✅ PINDAH KE SINI
+    hasil = pd.DataFrame({
+        "Provinsi": provinsi_valid,
+        "Cluster": cluster
+    })
 
-if prov_pilih != "Semua":
     # =========================
-    # DATAFRAME
+    # OUTPUT
     # =========================
     st.write("### Hasil Clustering")
-
     st.dataframe(hasil)
 
-    # =========================
-    # DISTRIBUSI
-    # =========================
     st.write("### Distribusi Cluster")
-
-    distribusi = (
-        hasil["Cluster"]
-        .value_counts()
-        .sort_index()
-    )
-
+    distribusi = hasil["Cluster"].value_counts().sort_index()
     st.bar_chart(distribusi)
 
-    # =========================
-    # PETA CLUSTER
-    # =========================
     st.write("### Peta Cluster DTW")
-
     map_data = indo.merge(
         hasil,
         left_on="Propinsi",
@@ -421,7 +392,6 @@ if prov_pilih != "Semua":
     )
 
     fig, ax = plt.subplots(figsize=(14, 8))
-
     map_data.plot(
         column="Cluster",
         cmap="Set2",
@@ -430,14 +400,10 @@ if prov_pilih != "Semua":
         edgecolor="black"
     )
 
-    ax.set_title(
-        "Cluster DTW Provinsi Indonesia"
-    )
-
+    ax.set_title("Cluster DTW Provinsi Indonesia")
     ax.axis("off")
 
     st.pyplot(fig)
-
     # =========================
     # INTERPRETASI
     # =========================
