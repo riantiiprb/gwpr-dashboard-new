@@ -26,6 +26,12 @@ def load_data():
 
     df.columns = df.columns.str.strip()
 
+df = df.rename(columns={
+    "Laju Pertumbuhan Produk Domestik Regional Bruto  Atas Dasar Harga Konstan 2010 Menurut Provinsi (persen)": "Pertumbuhan",
+    "[Metode Baru] Pengeluaran Perkapita Disesuaikan": "Pengeluaran",
+    "Gini_Ratio": "Gini"
+})
+
     df["Provinsi"] = df["Provinsi"].str.upper()
 
     num_cols = [
@@ -54,8 +60,6 @@ def load_data():
 
 df = load_data()
 
-
-st.write(df.columns.tolist())
 # =========================
 # LOAD GEOJSON
 # =========================
