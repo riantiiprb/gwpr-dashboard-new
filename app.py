@@ -372,19 +372,15 @@ elif menu == "DTW Clustering":
 
             X.append(arr)
 
-    X = np.array(
-        X,
-        dtype=np.float64
-    )
+    X = np.stack(X).astype(np.float64)
 
-    st.write("Shape X:", X.shape)
 
-    # =========================
-    # SCALING
-    # =========================
-    scaler = TimeSeriesScalerMeanVariance()
+# =========================
+# SCALING
+# =========================
+scaler = TimeSeriesScalerMeanVariance()
 
-    X_scaled = scaler.fit_transform(X)
+X_scaled = scaler.fit_transform(X)
 
     # =========================
     # MODEL DTW
