@@ -277,103 +277,18 @@ elif menu == "DTW Clustering":
     st.subheader("Dynamic Time Warping Clustering")
 
     # =========================
-    # SIDEBAR DTW
+    # LOAD CLUSTERING RESULTS DARI CSV
     # =========================
-    st.sidebar.subheader("Pengaturan DTW")
-
-    available_features = [
-        c for c in [
-            "Pertumbuhan",
-            "Pengeluaran",
-            "TPT",
-            "Kemiskinan",
-            "Gini",
-            "IPM"
-        ]
-        if c in df.columns
-    ]
-
-    fitur = st.sidebar.multiselect(
-        "Pilih Variabel",
-        available_features,
-        default=available_features[:3]
-    )
-
-    n_cluster = st.sidebar.slider(
-        "Jumlah Cluster",
-        min_value=2,
-        max_value=6,
-        value=3
-    )
-
-    if len(fitur) == 0:
-        st.warning("Pilih minimal satu variabel")
-        st.stop()
-
-    # =========================
-    # TIME SERIES
-    # =========================
-    pivot_data = {}
-
-    for fitur_col in fitur:
-        pivot = df.pivot_table(
-            index="Provinsi",
-            columns="Tahun",
-            values=fitur_col
+    @st.cache_data
+    def load_clustering():
+        hasil = pd.read_csv(
+            "dtw_clustering_result.csv"
         )
+        hasil.columns = hasil.columns.str.strip()
+        hasil["Provinsi"] = hasil["Provinsi"].str.upper()
+        return hasil
 
-        pivot = pivot.sort_index(axis=1)
-        pivot = pivot.interpolate(axis=1).ffill(axis=1).bfill(axis=1)
-
-        pivot_data[fitur_col] = pivot
-
-    provinsi_valid = pivot_data[fitur[0]].index.tolist()
-
-    X = []
-
-    for prov in provinsi_valid:
-        series_list = []
-
-        for fitur_col in fitur:
-            vals = pivot_data[fitur_col].loc[prov].values
-            vals = np.nan_to_num(vals)
-            series_list.append(vals)
-
-        arr = np.array(series_list)
-        X.append(arr)
-
-    if len(X) == 0:
-        st.error("Data kosong setelah preprocessing")
-        st.stop()
-
-    X = np.stack(X).astype(np.float64)
-
-    # X shape is now: (34, n_features, n_timestamps) = (34, 3, 4)
-    # This is the correct format for TimeSeriesScalerMeanVariance
-    st.write("Shape untuk scaler:", X.shape)
-
-    # =========================
-    # SCALING
-    # =========================
-    scaler = TimeSeriesScalerMeanVariance()
-    X_scaled = scaler.fit_transform(X)
-
-    # =========================
-    # MODEL
-    # =========================
-    model = TimeSeriesKMeans(
-        n_clusters=n_cluster,
-        metric="dtw",
-        random_state=42
-    )
-
-    cluster = model.fit_predict(X_scaled)
-
-    # PINDAH KE SINI
-    hasil = pd.DataFrame({
-        "Provinsi": provinsi_valid,
-        "Cluster": cluster
-    })
+    hasil = load_clustering()
 
     # =========================
     # OUTPUT
@@ -429,3 +344,5 @@ elif menu == "DTW Clustering":
         - Anggota:
         {", ".join(anggota)}
         """)
+
+
