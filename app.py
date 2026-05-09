@@ -322,57 +322,80 @@ elif menu == "DTW Clustering":
     # =========================
     # TIME SERIES
     # =========================
-    provinsi_list = sorted(
-        df["Provinsi"].unique()
-    )
+    pivot_data = {}
 
-    tahun_unik = sorted(
-        df["Tahun"].unique()
+    for fitur_col in fitur:
+
+        pivot = df.pivot_table(
+            index="Provinsi",
+            columns="Tahun",
+            values=fitur_col
+        )
+
+        pivot = pivot.sort_index(axis=1)
+
+        pivot_data[fitur_col] = pivot
+
+    provinsi_valid = (
+        pivot_data[fitur[0]]
+        .index
+        .tolist()
     )
 
     X = []
 
-    provinsi_valid = []
+    for prov in provinsi_valid:
 
-    for prov in provinsi_list:
+        series_list = []
 
-        temp = (
-            df[df["Provinsi"] == prov]
-            .sort_values("Tahun")
-        )
+        valid = True
 
-        if len(temp) == len(tahun_unik):
+        for fitur_col in fitur:
 
-            values = temp[fitur].values.astype(float)
+            vals = (
+                pivot_data[fitur_col]
+                .loc[prov]
+                .values
+            )
 
-            if not np.isnan(values).any():
+            if np.isnan(vals).any():
 
-                X.append(values)
+                valid = False
 
-                provinsi_valid.append(prov)
+                break
 
-X = np.array(X, dtype=np.float64)
+            series_list.append(vals)
 
-st.write("Shape X:", X.shape)
+        if valid:
 
-# =========================
-# =========================
-# SCALING
-# =========================
-scaler = TimeSeriesScalerMeanVariance()
+            arr = np.array(series_list).T
 
-X_scaled = scaler.fit_transform(X)
+            X.append(arr)
 
-# =========================
-# MODEL DTW
-# =========================
-model = TimeSeriesKMeans(
-    n_clusters=n_cluster,
-    metric="dtw",
-    random_state=42
-)
+    X = np.array(
+        X,
+        dtype=np.float64
+    )
 
-cluster = model.fit_predict(X_scaled)
+    st.write("Shape X:", X.shape)
+
+    # =========================
+    # SCALING
+    # =========================
+    scaler = TimeSeriesScalerMeanVariance()
+
+    X_scaled = scaler.fit_transform(X)
+
+    # =========================
+    # MODEL DTW
+    # =========================
+    model = TimeSeriesKMeans(
+        n_clusters=n_cluster,
+        metric="dtw",
+        random_state=42
+    )
+
+    cluster = model.fit_predict(X_scaled)
 
     hasil = pd.DataFrame({
 
