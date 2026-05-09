@@ -394,7 +394,7 @@ model = TimeSeriesKMeans(
 
 cluster = model.fit_predict(X_scaled)
 
-    hasil = pd.DataFrame({
+hasil = pd.DataFrame({
 
         "Provinsi": provinsi_valid,
 
