@@ -348,12 +348,9 @@ elif menu == "DTW Clustering":
 
     X = np.stack(X).astype(np.float64)
 
-    # FIX DIMENSI UNTUK TSLearn
-    X = np.transpose(X, (0, 2, 1))
-
-    # CEK DI SINI
-    st.write("Shape setelah transpose:", X.shape)
-    st.write("Shape X:", X.shape)
+    # Shape is now: (34, n_timestamps, n_features)
+    # This is the correct format for TimeSeriesScalerMeanVariance
+    st.write("Shape untuk scaler:", X.shape)
 
     # =========================
     # SCALING
