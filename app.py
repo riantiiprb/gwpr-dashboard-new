@@ -346,7 +346,13 @@ elif menu == "DTW Clustering":
         st.error("Data kosong setelah preprocessing")
         st.stop()
 
-    X = np.stack(X).astype(np.float64)
+X = np.stack(X).astype(np.float64)
+
+#FIX DIMENSI UNTUK TSLearn
+X = np.transpose(X, (0, 2, 1))
+
+#CEK DI SINI
+st.write("Shape setelah transpose:", X.shape)
 
     st.write("Shape X:", X.shape)
 
