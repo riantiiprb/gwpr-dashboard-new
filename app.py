@@ -279,6 +279,11 @@ elif menu == "DTW Clustering":
     # =========================
     st.sidebar.subheader("Pengaturan DTW")
 
+# =========================
+# SIDEBAR DTW
+# =========================
+st.sidebar.subheader("Pengaturan DTW")
+
 fitur = st.sidebar.multiselect(
     "Pilih Variabel",
     [
@@ -288,14 +293,15 @@ fitur = st.sidebar.multiselect(
         "Kemiskinan",
         "Gini",
         "IPM"
-    ],
-    n_cluster = st.sidebar.slider(
-        "Jumlah Cluster",
-        min_value=2,
-        max_value=6,
-        value=3
-    )
+    ]
+)
 
+n_cluster = st.sidebar.slider(
+    "Jumlah Cluster",
+    min_value=2,
+    max_value=6,
+    value=3
+)
     # =========================
     # VALIDASI
     # =========================
